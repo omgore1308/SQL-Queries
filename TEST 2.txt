@@ -1,0 +1,306 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| apollohospital     |
+| batch1342          |
+| company            |
+| demo               |
+| employeedata       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| teama              |
++--------------------+
+10 rows in set (0.00 sec)
+
+mysql> create database Capgemini;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> create table employee(id int PRIMARY KEY AUTO_INCREMENT, name varchar(50), Profile varchar(40), email varchar(40),salary int, age int, experience int);
+ERROR 1050 (42S01): Table 'employee' already exists
+mysql> use capgemini;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table employee(id int PRIMARY KEY AUTO_INCREMENT, name varchar(50), Profile varchar(40), email varchar(40),salary int, age int, experience int);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc employee;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(50) | YES  |     | NULL    |                |
+| Profile    | varchar(40) | YES  |     | NULL    |                |
+| email      | varchar(40) | YES  |     | NULL    |                |
+| salary     | int         | YES  |     | NULL    |                |
+| age        | int         | YES  |     | NULL    |                |
+| experience | int         | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+7 rows in set (0.02 sec)
+
+mysql> insert into employee(name,profile,email,salary,age,experience)values('rani','dev','rani@gmail.com',11000,43,27);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employee(name,profile,email,salary,age,experience)values('raj','test','raj@gmail.com',21000,33,17),('radha','test','radha@gmail.com',26000,38,21),('raj','dev','raj12@gmail.com',51000,32,12),('john','dev','john@gmail.com',51000,39,27);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee;
++----+-------+---------+-----------------+--------+------+------------+
+| id | name  | Profile | email           | salary | age  | experience |
++----+-------+---------+-----------------+--------+------+------------+
+|  1 | rani  | dev     | rani@gmail.com  |  11000 |   43 |         27 |
+|  2 | raj   | test    | raj@gmail.com   |  21000 |   33 |         17 |
+|  3 | radha | test    | radha@gmail.com |  26000 |   38 |         21 |
+|  4 | raj   | dev     | raj12@gmail.com |  51000 |   32 |         12 |
+|  5 | john  | dev     | john@gmail.com  |  51000 |   39 |         27 |
++----+-------+---------+-----------------+--------+------+------------+
+5 rows in set (0.01 sec)
+
+1.As a user, I want to add an column branch_location so I can 
+  efficiently search the branch wise record.
+
+mysql> ALTER table employee ADD column Branch_location varchar(40);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee;
++----+-------+---------+-----------------+--------+------+------------+-----------------+
+| id | name  | Profile | email           | salary | age  | experience | Branch_location |
++----+-------+---------+-----------------+--------+------+------------+-----------------+
+|  1 | rani  | dev     | rani@gmail.com  |  11000 |   43 |         27 | NULL            |
+|  2 | raj   | test    | raj@gmail.com   |  21000 |   33 |         17 | NULL            |
+|  3 | radha | test    | radha@gmail.com |  26000 |   38 |         21 | NULL            |
+|  4 | raj   | dev     | raj12@gmail.com |  51000 |   32 |         12 | NULL            |
+|  5 | john  | dev     | john@gmail.com  |  51000 |   39 |         27 | NULL            |
++----+-------+---------+-----------------+--------+------+------------+-----------------+
+5 rows in set (0.00 sec)
+
+2. As a user, I want to check the total salary expenses on employees.
+
+mysql> select SUM(SALARY) FROM EMPLOYEE;
++-------------+
+| SUM(SALARY) |
++-------------+
+|      160000 |
++-------------+
+1 row in set (0.01 sec)
+
+3. As a user, I want to see the max salary of employee from test 
+   profile. 
+
+mysql> SELECT MAX(SALARY) FROM EMPLOYEE;
++-------------+
+| MAX(SALARY) |
++-------------+
+|       51000 |
++-------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT MAX(SALARY),NAME FROM EMPLOYEE;
+ERROR 1140 (42000): In aggregated query without GROUP BY, expression #2 of SELECT list contains nonaggregated column 'capgemini.EMPLOYEE.name'; this is incompatible with sql_mode=only_full_group_by
+
+mysql> select MAX(salary) from employee where profile = 'test';
++-------------+
+| MAX(salary) |
++-------------+
+|       26000 |
++-------------+
+1 row in set (0.01 sec)
+
+4.As a user I want to get the average experience level of employees.
+
+mysql> select AVG(experience) from employee ;
++-----------------+
+| AVG(experience) |
++-----------------+
+|         20.8000 |
++-----------------+
+1 row in set (0.01 sec)
+
+5.As a user I want to see the name of highest paid employee. 
+
+mysql> select name from employee where salary = (select MAX(SALARY) FROM employee);
++------+
+| name |
++------+
+| raj  |
+| john |
++------+
+2 rows in set (0.01 sec)
+
+6.As a user, I want to see the name and experience of lowest paid 
+  employee. 
+
+mysql> select name AND experience from employee WHERE salary = (select min(salary) FROM employee);
++---------------------+
+| name AND experience |
++---------------------+
+|                   0 |
++---------------------+
+1 row in set, 1 warning (0.01 sec)
+
+mysql> select name,experience from employee WHERE salary = (select min(salary) FROM employee);
++------+------------+
+| name | experience |
++------+------------+
+| rani |         27 |
++------+------------+
+1 row in set (0.00 sec)
+
+7. As a user I want check how many employees are working in 
+   company. 
+
+mysql> select name from employee;
++-------+
+| name  |
++-------+
+| rani  |
+| raj   |
+| radha |
+| raj   |
+| john  |
++-------+
+5 rows in set (0.00 sec)
+
+mysql> select COUNT(id) from employee;
++-----------+
+| COUNT(id) |
++-----------+
+|         5 |
++-----------+
+1 row in set (0.01 sec)
+
+8.As a user I want to see those employee names who are from test 
+  profile and having salary more than 25K.
+
+mysql> select name from employee WHERE profile = 'test' AND salary > 25000;
++-------+
+| name  |
++-------+
+| radha |
++-------+
+1 row in set (0.01 sec)
+
+9. As a user, I want to shift Radha on support profile. 
+
+mysql> UPDATE employee set profile = support WHERE name = radha;
+ERROR 1054 (42S22): Unknown column 'radha' in 'where clause'
+mysql> UPDATE employee set profile = support WHERE name = 'radha';
+ERROR 1054 (42S22): Unknown column 'support' in 'field list'
+mysql> UPDATE employee set profile = 'support' WHERE name = 'radha';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee;
++----+-------+---------+-----------------+--------+------+------------+-----------------+
+| id | name  | Profile | email           | salary | age  | experience | Branch_location |
++----+-------+---------+-----------------+--------+------+------------+-----------------+
+|  1 | rani  | dev     | rani@gmail.com  |  11000 |   43 |         27 | NULL            |
+|  2 | raj   | test    | raj@gmail.com   |  21000 |   33 |         17 | NULL            |
+|  3 | radha | support | radha@gmail.com |  26000 |   38 |         21 | NULL            |
+|  4 | raj   | dev     | raj12@gmail.com |  51000 |   32 |         12 | NULL            |
+|  5 | john  | dev     | john@gmail.com  |  51000 |   39 |         27 | NULL            |
++----+-------+---------+-----------------+--------+------+------------+-----------------+
+5 rows in set (0.00 sec)
+
+10. As a user, I want to get the second highest salary of employee. 
+
+mysql> select salary from employee where salary < (select max(salary) from employee);
++--------+
+| salary |
++--------+
+|  11000 |
+|  21000 |
+|  26000 |
++--------+
+3 rows in set (0.00 sec)
+
+mysql>  (select max(salary) from employee);
++-------------+
+| max(salary) |
++-------------+
+|       51000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select max(salary) from employee WHERE salary < (select max(salary) from employee);
++-------------+
+| max(salary) |
++-------------+
+|       26000 |
++-------------+
+1 row in set (0.00 sec)
+
+11. As a user I want to get the second lowest salary of employee.
+
+mysql> select min(salary) from employee WHERE salary < (select min(salary) from employee);
++-------------+
+| min(salary) |
++-------------+
+|        NULL |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select min(salary) from employee WHERE salary > (select min(salary) from employee);
++-------------+
+| min(salary) |
++-------------+
+|       21000 |
++-------------+
+1 row in set (0.00 sec)
+
+12. As a user, I want to calculate the average salary of employees 
+    those are belongs to dev profile.
+  
+mysql> select AVG(salary) from employee WHERE profile = 'dev';
++-------------+
+| AVG(salary) |
++-------------+
+|  37666.6667 |
++-------------+
+1 row in set (0.00 sec)
+
+13. As a user, I want to see the employee’s name and salary who is 
+    having lowest experience.  
+
+mysql> select name,salary from employee WHERE experience = (select min(experience) from employee);
++------+--------+
+| name | salary |
++------+--------+
+| raj  |  51000 |
++------+--------+
+1 row in set (0.00 sec)
+
+14.As a user, I want to see the employee name who is having lowest 
+   age with max salary. 
+
+mysql> select name from employee WHERE age < (select min(age) FROM employee WHERE salary = (select MAX(SALARY)));
+Empty set (0.00 sec)
+
+mysql> select name from employee WHERE age < (select min(age) FROM employee WHERE salary = (select MAX(SALARY) from employee));
+Empty set (0.00 sec)
+
+mysql> select name from employee WHERE age < (select min(age) FROM employee WHERE salary = (select MAX(SALARY) from employee)));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+mysql> select name from employee WHERE age < (select min(age) FROM employee WHERE salary = (select MAX(SALARY) from employee));
+Empty set (0.00 sec)
+
+mysql> select name from employee WHERE age = (select min(age) FROM employee WHERE salary = (select MAX(SALARY) from employee));
++------+
+| name |
++------+
+| raj  |
++------+
+1 row in set (0.00 sec)
+
+15.As a user, I want to remove all the employee from company.
+
+mysql> TRUNCATE table employee;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql>
