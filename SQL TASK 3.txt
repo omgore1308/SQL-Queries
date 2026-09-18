@@ -1,0 +1,392 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| apollohospital     |
+| batch1342          |
+| capgemini          |
+| company            |
+| demo               |
+| employeedata       |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| teama              |
++--------------------+
+11 rows in set (0.04 sec)
+
+mysql> use batch1342;
+Database changed
+mysql> show tables;
++---------------------+
+| Tables_in_batch1342 |
++---------------------+
+| customer            |
+| demo                |
+| doctors             |
+| employee            |
+| hiring              |
+| products            |
+| shop                |
+| student             |
++---------------------+
+8 rows in set (0.02 sec)
+
+mysql> desc student;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| studID | int         | YES  |     | NULL    |       |
+| name   | varchar(50) | YES  |     | NULL    |       |
+| city   | varchar(50) | YES  |     | NULL    |       |
+| marks  | int         | YES  |     | NULL    |       |
+| age    | int         | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> select * from student;
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    101 | Om    | Nashik |    80 |   18 |
+|    102 | Rahul | Pune   |    75 |   19 |
+|    103 | Amit  | Mumbai |    90 |   20 |
+|    104 | Sneha | Nashik |    85 |   19 |
+|    105 | Priya | Pune   |    70 |   18 |
+|    106 | Rohit | Mumbai |    65 |   21 |
+|    107 | Neha  | Nashik |    92 |   20 |
+|    108 | Akash | Pune   |    78 |   19 |
+|    109 | Pooja | Mumbai |    88 |   18 |
+|    110 | Sahil | Nashik |    72 |   21 |
++--------+-------+--------+-------+------+
+10 rows in set (0.03 sec)
+
+1.find students who scored more than Rahul.
+
+mysql> select * from student WHERE marks > (select name from student WHERE name = 'rahul');
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    101 | Om    | Nashik |    80 |   18 |
+|    102 | Rahul | Pune   |    75 |   19 |
+|    103 | Amit  | Mumbai |    90 |   20 |
+|    104 | Sneha | Nashik |    85 |   19 |
+|    105 | Priya | Pune   |    70 |   18 |
+|    106 | Rohit | Mumbai |    65 |   21 |
+|    107 | Neha  | Nashik |    92 |   20 |
+|    108 | Akash | Pune   |    78 |   19 |
+|    109 | Pooja | Mumbai |    88 |   18 |
+|    110 | Sahil | Nashik |    72 |   21 |
++--------+-------+--------+-------+------+
+10 rows in set (0.00 sec)
+
+2.find students who scored less than Priya.
+
+mysql> select * from student WHERE MARKS < (select marks FROM student WHERE name = 'Priya');
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    106 | Rohit | Mumbai |    65 |   21 |
++--------+-------+--------+-------+------+
+1 row in set (0.00 sec)
+
+3.find student having the same marks as Rohit.
+
+mysql> select * from student WHERE marks = (select marks from student WHERE name = 'rohit');
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    106 | Rohit | Mumbai |    65 |   21 |
++--------+-------+--------+-------+------+
+1 row in set (0.00 sec)
+
+4.find students older than Amit
+
+mysql> select * from student WHERE age > (select age from student WHERE name = 'Amit');
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    106 | Rohit | Mumbai |    65 |   21 |
+|    110 | Sahil | Nashik |    72 |   21 |
++--------+-------+--------+-------+------+
+2 rows in set (0.00 sec)
+
+5.find student younger than Sneha.
+
+mysql> select * from student WHERE age < (select age from student WHERE name = 'Sneha');
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    101 | Om    | Nashik |    80 |   18 |
+|    105 | Priya | Pune   |    70 |   18 |
+|    109 | Pooja | Mumbai |    88 |   18 |
++--------+-------+--------+-------+------+
+3 rows in set (0.00 sec)
+
+6.find students who scored above the average marks.
+
+mysql> (select AVG(marks) from student);
++------------+
+| AVG(marks) |
++------------+
+|    79.5000 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select * from student WHERE marks > (select AVG(marks) from student);
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    101 | Om    | Nashik |    80 |   18 |
+|    103 | Amit  | Mumbai |    90 |   20 |
+|    104 | Sneha | Nashik |    85 |   19 |
+|    107 | Neha  | Nashik |    92 |   20 |
+|    109 | Pooja | Mumbai |    88 |   18 |
++--------+-------+--------+-------+------+
+5 rows in set (0.00 sec)
+
+7.find students who scored below the average marks.
+
+mysql> select * from student WHERE marks < (select AVG(marks) from student);
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    102 | Rahul | Pune   |    75 |   19 |
+|    105 | Priya | Pune   |    70 |   18 |
+|    106 | Rohit | Mumbai |    65 |   21 |
+|    108 | Akash | Pune   |    78 |   19 |
+|    110 | Sahil | Nashik |    72 |   21 |
++--------+-------+--------+-------+------+
+5 rows in set (0.00 sec)
+
+8.find the student with the highest marks.
+
+mysql> select max(marks) from student;
++------------+
+| max(marks) |
++------------+
+|         92 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select * from student WHERE marks = (select max(marks) from student);
++--------+------+--------+-------+------+
+| studID | name | city   | marks | age  |
++--------+------+--------+-------+------+
+|    107 | Neha | Nashik |    92 |   20 |
++--------+------+--------+-------+------+
+1 row in set (0.00 sec)
+
+9.find the student with the lowest marks.
+
+mysql> select * from student WHERE marks = (select min(marks) from student);
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    106 | Rohit | Mumbai |    65 |   21 |
++--------+-------+--------+-------+------+
+1 row in set (0.00 sec)
+
+10.find students whose marks are equals to the maximum marks.
+
+mysql> select * from student WHERE marks = (select max(marks) from student);
++--------+------+--------+-------+------+
+| studID | name | city   | marks | age  |
++--------+------+--------+-------+------+
+|    107 | Neha | Nashik |    92 |   20 |
++--------+------+--------+-------+------+
+1 row in set (0.00 sec)
+
+11.find students whose marks are greater than maximum marks of students from Mumbai.
+
+mysql> select * from student WHERE marks > (select Max(marks) from student WHERE CITY = 'mumbai');
++--------+------+--------+-------+------+
+| studID | name | city   | marks | age  |
++--------+------+--------+-------+------+
+|    107 | Neha | Nashik |    92 |   20 |
++--------+------+--------+-------+------+
+1 row in set (0.00 sec)
+
+12.find students whose marks are less than minimum marks of students from pune.
+
+mysql> select * from student WHERE marks < (select Min(marks) from student WHERE CITY = 'pune');
++--------+-------+--------+-------+------+
+| studID | name  | city   | marks | age  |
++--------+-------+--------+-------+------+
+|    106 | Rohit | Mumbai |    65 |   21 |
++--------+-------+--------+-------+------+
+1 row in set (0.00 sec)
+
+13.find students who are enrolled in the same course as Rahul.
+
+mysql> select * from student where name = (select name from student WHERE name = 'rahul');
++--------+-------+------+-------+------+
+| studID | name  | city | marks | age  |
++--------+-------+------+-------+------+
+|    102 | Rahul | Pune |    75 |   19 |
++--------+-------+------+-------+------+
+1 row in set (0.00 sec)
+
+mysql> select name from student where name = (select name from student WHERE name = 'rahul');
++-------+
+| name  |
++-------+
+| Rahul |
++-------+
+1 row in set (0.00 sec)
+
+mysql> ALTER table student ADD column course varchar(50);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER table student ADD tax varchar(50);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DROP column tax;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column tax' at line 1
+mysql> alter table student DROP column tax;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update into student set course = full_stack WHERE studID = 102;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'into student set course = full_stack WHERE studID = 102' at line 1
+mysql> select * from student;
++--------+-------+--------+-------+------+--------+
+| studID | name  | city   | marks | age  | course |
++--------+-------+--------+-------+------+--------+
+|    101 | Om    | Nashik |    80 |   18 | NULL   |
+|    102 | Rahul | Pune   |    75 |   19 | NULL   |
+|    103 | Amit  | Mumbai |    90 |   20 | NULL   |
+|    104 | Sneha | Nashik |    85 |   19 | NULL   |
+|    105 | Priya | Pune   |    70 |   18 | NULL   |
+|    106 | Rohit | Mumbai |    65 |   21 | NULL   |
+|    107 | Neha  | Nashik |    92 |   20 | NULL   |
+|    108 | Akash | Pune   |    78 |   19 | NULL   |
+|    109 | Pooja | Mumbai |    88 |   18 | NULL   |
+|    110 | Sahil | Nashik |    72 |   21 | NULL   |
++--------+-------+--------+-------+------+--------+
+10 rows in set (0.01 sec)
+
+mysql> update student set course = 'full_stack' WHERE studID = 102;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'full_stack' WHERE studID = 108;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'full_stack' WHERE studID = 105;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'data_analytics' WHERE studID = 105;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'data_analytics' WHERE studID = 110;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'data_analytics' WHERE studID = 103;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'data_analytics' WHERE studID = 107;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'full_stack' WHERE studID = 105;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'cyber_security' WHERE studID = 101;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'cyber_security' WHERE studID = 106;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'cyber_security' WHERE studID = 109;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set course = 'cyber_security' WHERE studID = 104;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++--------+-------+--------+-------+------+----------------+
+| studID | name  | city   | marks | age  | course         |
++--------+-------+--------+-------+------+----------------+
+|    101 | Om    | Nashik |    80 |   18 | cyber_security |
+|    102 | Rahul | Pune   |    75 |   19 | full_stack     |
+|    103 | Amit  | Mumbai |    90 |   20 | data_analytics |
+|    104 | Sneha | Nashik |    85 |   19 | cyber_security |
+|    105 | Priya | Pune   |    70 |   18 | full_stack     |
+|    106 | Rohit | Mumbai |    65 |   21 | cyber_security |
+|    107 | Neha  | Nashik |    92 |   20 | data_analytics |
+|    108 | Akash | Pune   |    78 |   19 | full_stack     |
+|    109 | Pooja | Mumbai |    88 |   18 | cyber_security |
+|    110 | Sahil | Nashik |    72 |   21 | data_analytics |
++--------+-------+--------+-------+------+----------------+
+10 rows in set (0.00 sec)
+
+---------> FINALLY ANSWER
+
+mysql> select * from student WHERE course = (select course from student WHERE name = 'rahul');
++--------+-------+------+-------+------+------------+
+| studID | name  | city | marks | age  | course     |
++--------+-------+------+-------+------+------------+
+|    102 | Rahul | Pune |    75 |   19 | full_stack |
+|    105 | Priya | Pune |    70 |   18 | full_stack |
+|    108 | Akash | Pune |    78 |   19 | full_stack |
++--------+-------+------+-------+------+------------+
+3 rows in set (0.00 sec)
+
+
+14.find students age is present among Mumbai Students.
+
+mysql> select age from student WHERE city = 'mumbai';
++------+
+| age  |
++------+
+|   20 |
+|   21 |
+|   18 |
++------+
+3 rows in set (0.00 sec)
+
+
+mysql> select * from student WHERE age IN (select age from student WHERE city = 'mumbai');
++--------+-------+--------+-------+------+----------------+
+| studID | name  | city   | marks | age  | course         |
++--------+-------+--------+-------+------+----------------+
+|    101 | Om    | Nashik |    80 |   18 | cyber_security |
+|    103 | Amit  | Mumbai |    90 |   20 | data_analytics |
+|    105 | Priya | Pune   |    70 |   18 | full_stack     |
+|    106 | Rohit | Mumbai |    65 |   21 | cyber_security |
+|    107 | Neha  | Nashik |    92 |   20 | data_analytics |
+|    109 | Pooja | Mumbai |    88 |   18 | cyber_security |
+|    110 | Sahil | Nashik |    72 |   21 | data_analytics |
++--------+-------+--------+-------+------+----------------+
+7 rows in set (0.00 sec)
+
+15.find students whose marks are present among Pune students.
+
+mysql> select * from student WHERE age IN (select age from student WHERE city = 'pune');
++--------+-------+--------+-------+------+----------------+
+| studID | name  | city   | marks | age  | course         |
++--------+-------+--------+-------+------+----------------+
+|    101 | Om    | Nashik |    80 |   18 | cyber_security |
+|    102 | Rahul | Pune   |    75 |   19 | full_stack     |
+|    104 | Sneha | Nashik |    85 |   19 | cyber_security |
+|    105 | Priya | Pune   |    70 |   18 | full_stack     |
+|    108 | Akash | Pune   |    78 |   19 | full_stack     |
+|    109 | Pooja | Mumbai |    88 |   18 | cyber_security |
++--------+-------+--------+-------+------+----------------+
+6 rows in set (0.00 sec)
+
+mysql>
