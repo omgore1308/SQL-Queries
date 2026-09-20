@@ -1,0 +1,104 @@
+show databases;
+
+create database company;
+
+use company;
+
+create table employee (empID INT ,name varchar(50) ,gender varchar(30) ,email varchar(40) ,mobNo bigint );
+
+DESC employee;
+
+insert into employee(empID,name,gender,email,mobNo)values(121,"om","male","omgore@gmail.com",6467989785);
+
+select * from employee;
+
+Delete from employee WHERE empID = 121;
+
+update employee set name = "rohan" WHERE empID = 121;
+
+select email from employee;
+
+select name,email,gender from employee;
+
+
+PRIMARY KEY
+
+ create table employee (empID  INT PRIMARY KEY ,name varchar(50) ,gender varchar(30) ,email varchar(40) ,mobNo bigint );
+
+
+OPERATOR
+
+
+select * from employee wHERE email is NOT NULL;
+
+select * from employee wHERE gender is NULL;
+
+select * from employee WHERE name = rohan and gender = male;
+
+select * from employee WHERE name = ram OR gender = male;
+
+SELECT * FROM employee WHERE NOT gender = "male";
+
+
+ALTER QUERIES
+
+
+ALTER table employee ADD column city varchar(40);
+
+ALTER table employee MODIFY column mobNO int;
+
+ALTER TABLE employee DROP column email;
+
+ALTER TABLE employee RENAME COLUMN city to state;
+
+ALTER table employee rename TABLE employeeData;
+
+DROP TABLE employeeData;
+
+DROP DATABASE company;
+
+
+ORDER BY
+
+
+select * from employee ORDER BY name ASC;
+
+select * from employee ORDER BY name DESC;
+
+
+
+UNIQUE KEY
+
+create table employee (empID INT PRIMARY KEY ,name varchar(50) NOT NULL ,gender varchar(30) ,email varchar(40) UNIQUE ,mobNo bigint UNIQUE NOT NULL);
+
+
+
+LIMIT & OFFSET
+
+SELECT * from employee LIMIT 5  OFFSET 3;
+
+
+ALIAS
+
+SELECT name AS Official_name FROM employee;
+
+
+DATATYPES
+
+create table 
+
+ create table employee(empID INT, MobNO BIGINT, height FLOAT, salary DOUBLE, tax DECIMAL(5,2), gender CHAR, name VARCHAR(50), feedback TEXT, joining_date DATE, work_time TIME, punchIn TIMESTAMP, is_active BOOLEAN, extra JSON);
+
+
+insert values
+
+ insert into employee values(101,6789665638,6.5,6500.000,150.00,'M','Om','i like your communication','2026-05-18', '07:30:00','2026-08-13  06:20:00', TRUE, '{"name":"om","city":"Nashik"}');
+ 
+
+
+
+ 
+
+
+
+
